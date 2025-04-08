@@ -13,8 +13,10 @@
         "axios": "^0.21.4",
         "body-parser": "^1.20.3",
         "discord.js": "^14.18.0",
+        "dotenv": "^16.4.7",
         "express": "^4.21.2",
         "node-cron": "^3.0.3",
         "node-nlp": "^4.27.0"
+        "dotenv": "^4.27.0"
     }
 }
