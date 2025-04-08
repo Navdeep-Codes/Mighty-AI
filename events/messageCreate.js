@@ -1,4 +1,3 @@
-const config = require('../config.json');
 const { handleCommand } = require('../utils/commandHandler');
 
 module.exports = async (client, message) => {
