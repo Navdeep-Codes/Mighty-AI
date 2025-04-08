@@ -46,6 +46,7 @@ module.exports = {
       // Send the response from the AI model back to the user
       const aiResponse = response.body.choices[0].message.content;
       message.reply(aiResponse);
+      console.log("AI Response:", aiResponse); // Debugging statement
 
     } catch (err) {
       console.error("Error occurred while fetching AI response:", err);
