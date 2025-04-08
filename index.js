@@ -3,7 +3,7 @@ const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('fs');
 const cron = require('node-cron');
 const { resetMessageLimits } = require('./utils/messageLimitManager');
-const Online = require('./Online');
+const Online = require('./Online.js');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
