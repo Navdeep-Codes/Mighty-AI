@@ -3,11 +3,14 @@ const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('fs');
 const cron = require('node-cron');
 const { resetMessageLimits } = require('./utils/messageLimitManager');
+const Online = require('./Online');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 client.commands = new Collection();
 client.aliases = new Collection();
+
+Online();
 
 // Load Commands
 fs.readdirSync('./commands/').forEach(dir => {
