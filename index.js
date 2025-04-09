@@ -10,35 +10,43 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 client.commands = new Collection();
 client.aliases = new Collection();
 
-Online();
+const mongoose = require('mongoose');
 
-// Load Commands
-fs.readdirSync('./commands/').forEach(dir => {
-  const commandFiles = fs.readdirSync(`./commands/${dir}/`).filter(file => file.endsWith('.js'));
-  for (const file of commandFiles) {
-    const command = require(`./commands/${dir}/${file}`);
-    client.commands.set(command.name, command);
-    if (command.aliases) {
-      command.aliases.forEach(alias => {
-        client.aliases.set(alias, command.name);
-      });
-    }
-    console.log(`Loaded command: ${command.name} from ${dir}/${file}`); // Debugging statement
+(async () => {
+  // Connect to MongoDB
+  try {
+    await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('Error connecting to MongoDB:', err);
+    process.exit(1);]
   }
-});
 
-// Load Events
-fs.readdirSync('./events/').filter(file => file.endsWith('.js')).forEach(file => {
-  const event = require(`./events/${file}`);
-  const eventName = file.split('.')[0];
-  client.on(eventName, event.bind(null, client));
-  console.log(`Loaded event: ${eventName}`); // Debugging statement
-});
+]  fs.readdirSync('./commands/').forEach(dir => {
+    const commandFiles = fs.readdirSync(`./commands/${dir}/`).filter(file => file.endsWith('.js'));
+    for (const file of commandFiles) {
+      const command = require(`./commands/${dir}/${file}`);
+      client.commands.set(command.name, command);
+      if (command.aliases) {
+        command.aliases.forEach(alias => {
+          client.aliases.set(alias, command.name);
+        });
+      }
+      console.log(`Loaded command: ${command.name} from ${dir}/${file}`);
+    }
+  });
 
-// Schedule a daily reset of message limits at midnight
-cron.schedule('0 0 * * *', () => {
-  console.log('Resetting message limits');
-  resetMessageLimits();
-});
+  fs.readdirSync('./events/').filter(file => file.endsWith('.js')).forEach(file => {
+    const event = require(`./events/${file}`);
+    const eventName = file.split('.')[0];
+    client.on(eventName, event.bind(null, client));
+    console.log(`Loaded event: ${eventName}`);
+  });
+
+  cron.schedule('0 0 * * *', async () => {
+    console.log('Resetting message limits');
+    await resetMessageLimits();
+  });
+
 
 client.login(process.env.DISCORD_TOKEN);
