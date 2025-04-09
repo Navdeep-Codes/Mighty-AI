@@ -1,53 +1,50 @@
-const fs = require('fs');
-const path = require('path');
-
-const dataPath = path.join(__dirname, '../data/messageLimits.json');
-const messageLimits = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+const MessageLimit = require('../models/MessageLimit');
 
 const NON_PREMIUM_LIMIT = 50;
 const PREMIUM_LIMIT = 15;
 
-function checkMessageLimit(userId, commandName, isPremium, isPremiumCommand) {
-  if (!messageLimits[userId]) {
-    messageLimits[userId] = {
-      nonPremium: {},
-      premium: {}
-    };
+async function checkMessageLimit(userId, commandName, isPremiumCommand) {
+  let userLimits = await MessageLimit.findOne({ userId });
+
+  if (!userLimits) {
+    userLimits = new MessageLimit({ userId });
+    await userLimits.save();
   }
 
-  const userLimits = messageLimits[userId];
-
   if (isPremiumCommand) {
-    if (!userLimits.premium[commandName]) {
-      userLimits.premium[commandName] = 0;
-    }
-    return userLimits.premium[commandName] < PREMIUM_LIMIT;
+    const usedCount = userLimits.premium.get(commandName) || 0;
+    return usedCount < PREMIUM_LIMIT;
   } else {
-    if (!userLimits.nonPremium[commandName]) {
-      userLimits.nonPremium[commandName] = 0;
-    }
-    return userLimits.nonPremium[commandName] < NON_PREMIUM_LIMIT;
+    const usedCount = userLimits.nonPremium.get(commandName) || 0;
+    return usedCount < NON_PREMIUM_LIMIT;
   }
 }
 
-function incrementMessageLimit(userId, commandName, isPremiumCommand) {
-  const userLimits = messageLimits[userId];
+async function incrementMessageLimit(userId, commandName, isPremiumCommand) {
+  let userLimits = await MessageLimit.findOne({ userId });
+
+  if (!userLimits) {
+    userLimits = new MessageLimit({ userId });
+  }
 
   if (isPremiumCommand) {
-    userLimits.premium[commandName]++;
+    const usedCount = userLimits.premium.get(commandName) || 0;
+    userLimits.premium.set(commandName, usedCount + 1);
   } else {
-    userLimits.nonPremium[commandName]++;
+    const usedCount = userLimits.nonPremium.get(commandName) || 0;
+    userLimits.nonPremium.set(commandName, usedCount + 1);
   }
 
-  fs.writeFileSync(dataPath, JSON.stringify(messageLimits, null, 2));
+  await userLimits.save();
 }
 
-function resetMessageLimits() {
-  for (const userId in messageLimits) {
-    messageLimits[userId].nonPremium = {};
-    messageLimits[userId].premium = {};
+async function resetMessageLimits() {
+  const allUsers = await MessageLimit.find();
+  for (const user of allUsers) {
+    user.nonPremium = {};
+    user.premium = {};
+    await user.save();
   }
-  fs.writeFileSync(dataPath, JSON.stringify(messageLimits, null, 2));
 }
 
 module.exports = {
