@@ -22,7 +22,7 @@ const mongoose = require('mongoose');
     process.exit(1);
   }
 
-]  fs.readdirSync('./commands/').forEach(dir => {
+fs.readdirSync('./commands/').forEach(dir => {
     const commandFiles = fs.readdirSync(`./commands/${dir}/`).filter(file => file.endsWith('.js'));
     for (const file of commandFiles) {
       const command = require(`./commands/${dir}/${file}`);
