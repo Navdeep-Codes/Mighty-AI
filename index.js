@@ -9,7 +9,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 client.commands = new Collection();
 client.aliases = new Collection();
-
+Online();
 const mongoose = require('mongoose');
 
 (async () => {
