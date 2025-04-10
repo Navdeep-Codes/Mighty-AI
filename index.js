@@ -50,3 +50,4 @@ fs.readdirSync('./commands/').forEach(dir => {
 
 
 client.login(process.env.DISCORD_TOKEN);
+})();
