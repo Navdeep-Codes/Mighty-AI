@@ -1,3 +1,7 @@
+const fs = require('fs');
+const path = require('path');
+
+const dataPath = path.join(__dirname, '../../data/registeredUsers.json');
 const MessageLimit = require('../../models/MessageLimit');
 
 const NON_PREMIUM_LIMIT = 50;
@@ -22,6 +26,31 @@ module.exports = {
       `Here are your remaining message limits:\n` +
       `- Non-Premium Commands: ${nonPremiumLeft} messages left (out of ${NON_PREMIUM_LIMIT})\n` +
       `- Premium Commands: ${premiumLeft} messages left (out of ${PREMIUM_LIMIT})`
+  
+    let data;
+    try {
+      const fileData = fs.readFileSync(dataPath, 'utf8');
+      data = JSON.parse(fileData);
+    } catch (err) {
+      console.error('Error reading registeredUsers.json:', err);
+      return message.reply('There was an error verifying your access to the Groq model.');
+    }
+
+    // Check if the user is registered
+    if (!data.users.includes(userId)) {
+      return message.reply('You are not registered to access the Groq No Limit AI Model. Use @register to register.');
+    }
+
+    // User is registered, proceed with the Groq model logic
+    const query = args.join(' ');
+    if (!query) {
+      return message.reply('Please provide a query for the Groq model.');
+    }
+
+  
+    const simulatedResponse = `You asked: "${query}". Here is the simulated response from the Groq No Limit AI Model.`;
+
+    return message.reply(simulatedResponse);
     );
   },
 };
