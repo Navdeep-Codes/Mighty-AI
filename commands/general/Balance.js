@@ -4,7 +4,7 @@ const NON_PREMIUM_LIMIT = 50;
 const PREMIUM_LIMIT = 15;
 
 module.exports = {
-  name: 'messageLimits',
+  name: 'messagelimits',
   description: 'Check how many messages you have left',
   premium: false,
   async execute(client, message, args, userStatus) {
