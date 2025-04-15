@@ -10,7 +10,7 @@ const endpoint = "https://models.inference.ai.azure.com";
 const modelName = "DeepSeek-V3";
 
 module.exports = {
-  name: 'deepseek-v3',
+  name: 'deepseek',
   description: 'Use DeepSeek-V3',
   premium: true,
   async execute(client, message, args, userStatus) {

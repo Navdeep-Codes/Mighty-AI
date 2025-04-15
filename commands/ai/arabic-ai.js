@@ -10,8 +10,8 @@ const endpoint = "https://models.inference.ai.azure.com";
 const modelName = "jais-30b-chat";
 
 module.exports = {
-  name: 'arabic-ai',
-  description: 'Use Arabic Languages AI Model',
+  name: 'arabic',
+  description: 'Use Arabic Language AI Model',
   premium: false,
   async execute(client, message, args, userStatus) {
     console.log("freeModel command executed"); // Debugging statement

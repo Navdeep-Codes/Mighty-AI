@@ -10,7 +10,7 @@ const endpoint = "https://models.inference.ai.azure.com";
 const modelName = "Mistral-Nemo";
 
 module.exports = {
-  name: 'mistral-nemo',
+  name: 'mistral',
   description: 'Use Mistral-Nemo',
   premium: false,
   async execute(client, message, args, userStatus) {

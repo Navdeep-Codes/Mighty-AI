@@ -10,7 +10,7 @@ const endpoint = "https://models.inference.ai.azure.com";
 const modelName = "Codestral-2501";
 
 module.exports = {
-  name: 'codestral',
+  name: 'code',
   description: 'Use Codestral-2501',
   premium: false,
   async execute(client, message, args, userStatus) {
